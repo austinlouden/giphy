@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GIFCollectionViewCell : UICollectionViewCell
 @property (nonatomic, strong) PINAnimatedImageView *imageView;
+@property (nonatomic, assign) CGSize imageSize;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -17,7 +17,6 @@
 #define GIPHY_API_KEY @""
 
 static CGFloat const kSearchBarHeight = 100.0;
-static CGFloat const kSearchBarPadding = 16.0;
 
 @interface ViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UITextFieldDelegate>
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -43,10 +42,7 @@ static CGFloat const kSearchBarPadding = 16.0;
     self.view.backgroundColor = [UIColor blackColor];
     
     // Create the search bar
-    self.textField = [[UITextField alloc] initWithFrame:CGRectMake(kSearchBarPadding,
-                                                                   self.view.safeAreaInsets.top + kSearchBarPadding,
-                                                                   CGRectGetWidth(self.view.frame) - kSearchBarPadding,
-                                                                   kSearchBarHeight)];
+    self.textField = [[UITextField alloc] init];
     self.textField.delegate = self;
     self.textField.placeholder = @"Search";
     self.textField.backgroundColor = [UIColor colorWithWhite:1 alpha:0.5];
@@ -55,22 +51,34 @@ static CGFloat const kSearchBarPadding = 16.0;
 
     // Create the collection view
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.scrollDirection = UICollectionViewScrollDirectionVertical;
-    layout.estimatedItemSize = CGSizeMake(1, 1);
+    layout.estimatedItemSize = UICollectionViewFlowLayoutAutomaticSize;
+    layout.sectionInsetReference = UICollectionViewFlowLayoutSectionInsetFromLayoutMargins;
     
-    layout.minimumInteritemSpacing = 0.0;
-    layout.minimumLineSpacing = 0.0;
-    layout.sectionInset = UIEdgeInsetsZero;
-    
-    CGRect frame = CGRectMake(0, CGRectGetMaxY(self.textField.frame), CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - kSearchBarHeight);
-    
-    self.collectionView = [[UICollectionView alloc] initWithFrame:frame collectionViewLayout:layout];
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
     self.collectionView.backgroundColor = [UIColor whiteColor];
+    self.collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentAlways;
+    self.collectionView.contentInset = UIEdgeInsetsZero;
+
     [self.collectionView registerClass:[GIFCollectionViewCell class] forCellWithReuseIdentifier:@"GIFCell"];
     [self.view addSubview:self.collectionView];
+
+    // Setup search bar constraints
+    self.textField.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.textField.topAnchor constraintEqualToAnchor:self.view.topAnchor].active = YES;
+    [self.textField.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active = YES;
+    [self.textField.rightAnchor constraintEqualToAnchor:self.view.rightAnchor].active = YES;
+    [self.textField.heightAnchor constraintEqualToConstant:kSearchBarHeight].active = YES;
     
+    // Setup collection view constraints
+    self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.collectionView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
+    [self.collectionView.topAnchor constraintEqualToAnchor:self.textField.bottomAnchor].active = YES;
+    [self.collectionView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active = YES;
+    [self.collectionView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor].active = YES;
+    
+    // Fetch the images
     [self fetchImages:@"ryan gosling"];
 }
 
@@ -101,17 +109,25 @@ static CGFloat const kSearchBarPadding = 16.0;
 {
     GIFCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"GIFCell" forIndexPath:indexPath];
     NSURL *url = [NSURL URLWithString:self.images[indexPath.row][@"images"][@"fixed_width"][@"url"]];
-    [cell.imageView pin_setImageFromURL:url];
-    return cell;
-}
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+    
     CGFloat width = [self.images[indexPath.row][@"images"][@"fixed_width"][@"width"] floatValue];
     CGFloat height = [self.images[indexPath.row][@"images"][@"fixed_width"][@"height"] floatValue];
     CGFloat aspectRatio = width / height;
 
-    return CGSizeMake(CGRectGetWidth(collectionView.frame), CGRectGetWidth(collectionView.frame) / aspectRatio);
+    CGFloat fwidth = collectionView.frame.size.width - 20;
+    cell.imageSize = CGSizeMake(fwidth, fwidth  / aspectRatio);
+
+    [cell.imageView pin_setImageFromURL:url];
+    return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout *)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat width = collectionView.safeAreaLayoutGuide.layoutFrame.size.width - 40;
+    return CGSizeMake(width, 100);
+    
 }
 
 #pragma mark - UITextFieldDelegate
