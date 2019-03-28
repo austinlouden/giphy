@@ -36,17 +36,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor redColor];
+    self.view.backgroundColor = [UIColor blackColor];
 
     // Create the collection view
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame collectionViewLayout:layout];
     [self.collectionView setDataSource:self];
     [self.collectionView setDelegate:self];
-    
     [self.collectionView registerClass:[GIFCollectionViewCell class] forCellWithReuseIdentifier:@"GIFCell"];
-    [self.collectionView setBackgroundColor:[UIColor greenColor]];
-    
+    [self.collectionView setBackgroundColor:[UIColor blackColor]];
     [self.view addSubview:self.collectionView];
     
     [self fetchImages];
@@ -54,13 +52,11 @@
 
 - (void)fetchImages
 {
-    NSDictionary *parameters = @{ @"q": @"ryan gosling", @"limit": @5, @"api_key": GIPHY_API_KEY};
+    NSDictionary *parameters = @{ @"q": @"ryan gosling", @"limit": @100, @"api_key": GIPHY_API_KEY};
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     
     [manager GET:@"https://api.giphy.com/v1/gifs/search?" parameters:parameters progress:nil success:^(NSURLSessionTask *task, id responseObject) {
-        NSLog(@"%@", task.currentRequest.URL);
         self.images = responseObject[@"data"];
-        NSLog(@"%@", self.images[0]);
         [self.collectionView reloadData];
     } failure:^(NSURLSessionTask *operation, NSError *error) {
         NSLog(@"Error: %@", error);
@@ -79,6 +75,7 @@
 {
     GIFCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"GIFCell" forIndexPath:indexPath];
     
+    NSLog(@"%@", self.images[indexPath.row][@"images"][@"fixed_width"]);
     NSURL *url = [NSURL URLWithString:self.images[indexPath.row][@"images"][@"fixed_width"][@"url"]];
     [cell.imageView pin_setImageFromURL:url];
     return cell;
@@ -86,7 +83,11 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(CGRectGetWidth(self.view.frame), CGRectGetWidth(self.view.frame));
+    CGFloat width = [self.images[indexPath.row][@"images"][@"fixed_width"][@"width"] floatValue];
+    CGFloat height = [self.images[indexPath.row][@"images"][@"fixed_width"][@"height"] floatValue];
+    CGFloat aspectRatio = width / height;
+
+    return CGSizeMake(CGRectGetWidth(self.view.frame), CGRectGetWidth(self.view.frame) / aspectRatio);
 }
 
 
