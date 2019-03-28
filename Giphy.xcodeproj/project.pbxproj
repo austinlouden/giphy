@@ -14,6 +14,7 @@
 		28F0E8EA224C41FB008439DA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F0E8E9224C41FB008439DA /* main.m */; };
 		28F0E8F4224C41FB008439DA /* GiphyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F0E8F3224C41FB008439DA /* GiphyTests.m */; };
 		28F0E8FF224C41FB008439DA /* GiphyUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F0E8FE224C41FB008439DA /* GiphyUITests.m */; };
+		28F518A7224C4D17001B9030 /* GIFCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F518A6224C4D17001B9030 /* GIFCollectionViewCell.m */; };
 		95904C5425982F64BEA70312 /* libPods-Giphy.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47E34A7D008BB387EAA7CE4A /* libPods-Giphy.a */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +52,8 @@
 		28F0E8FA224C41FB008439DA /* GiphyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GiphyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		28F0E8FE224C41FB008439DA /* GiphyUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GiphyUITests.m; sourceTree = "<group>"; };
 		28F0E900224C41FB008439DA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		28F518A5224C4D17001B9030 /* GIFCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIFCollectionViewCell.h; sourceTree = "<group>"; };
+		28F518A6224C4D17001B9030 /* GIFCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIFCollectionViewCell.m; sourceTree = "<group>"; };
 		47E34A7D008BB387EAA7CE4A /* libPods-Giphy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Giphy.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A92A017C776BFFCBD098EC0B /* Pods-Giphy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Giphy.release.xcconfig"; path = "Target Support Files/Pods-Giphy/Pods-Giphy.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,7 +90,6 @@
 				073570C97F65311C7F30DCDB /* Pods-Giphy.debug.xcconfig */,
 				A92A017C776BFFCBD098EC0B /* Pods-Giphy.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -120,6 +122,8 @@
 				28F0E8DB224C41FA008439DA /* AppDelegate.m */,
 				28F0E8DD224C41FA008439DA /* ViewController.h */,
 				28F0E8DE224C41FA008439DA /* ViewController.m */,
+				28F518A5224C4D17001B9030 /* GIFCollectionViewCell.h */,
+				28F518A6224C4D17001B9030 /* GIFCollectionViewCell.m */,
 				28F0E8E3224C41FB008439DA /* Assets.xcassets */,
 				28F0E8E5224C41FB008439DA /* LaunchScreen.storyboard */,
 				28F0E8E8224C41FB008439DA /* Info.plist */,
@@ -312,6 +316,7 @@
 				28F0E8DF224C41FA008439DA /* ViewController.m in Sources */,
 				28F0E8EA224C41FB008439DA /* main.m in Sources */,
 				28F0E8DC224C41FA008439DA /* AppDelegate.m in Sources */,
+				28F518A7224C4D17001B9030 /* GIFCollectionViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

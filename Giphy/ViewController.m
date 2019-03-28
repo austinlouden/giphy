@@ -8,11 +8,13 @@
 
 #import "ViewController.h"
 
-#import <PINRemoteImage/PINImageView+PINRemoteImage.h>
-#import <PINRemoteImage/PINAnimatedImageView.h>
+#import "GIFCollectionViewCell.h"
 
-@interface ViewController ()
-@property (nonatomic, strong) PINAnimatedImageView *animatedImageView;
+#import <PINRemoteImage/PINAnimatedImageView.h>
+#import <PINRemoteImage/PINImageView+PINRemoteImage.h>
+
+@interface ViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
+@property (nonatomic, strong) UICollectionView *collectionView;
 @end
 
 @implementation ViewController
@@ -20,7 +22,6 @@
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nil bundle:nil]) {
-        
     }
     
     return self;
@@ -29,17 +30,35 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor redColor];
+
+    // Create the collection view
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame collectionViewLayout:layout];
+    [self.collectionView setDataSource:self];
+    [self.collectionView setDelegate:self];
     
-    self.animatedImageView = [[PINAnimatedImageView alloc] init];
-    self.animatedImageView.backgroundColor = [UIColor whiteColor];
-    self.animatedImageView.frame = CGRectMake(0, 0, 100, 100);
-    [self.view addSubview:self.animatedImageView];
+    [self.collectionView registerClass:[GIFCollectionViewCell class] forCellWithReuseIdentifier:@"GIFCell"];
+    [self.collectionView setBackgroundColor:[UIColor greenColor]];
+    
+    [self.view addSubview:self.collectionView];
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    [super viewWillAppear:animated];
-    [self.animatedImageView pin_setImageFromURL:[NSURL URLWithString:@"https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif"]];
+    return 10;
+}
+
+// The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    GIFCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"GIFCell" forIndexPath:indexPath];
+    [cell.imageView pin_setImageFromURL:[NSURL URLWithString:@"https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif"]];
+    return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(CGRectGetWidth(self.view.frame), CGRectGetWidth(self.view.frame));
 }
 
 
