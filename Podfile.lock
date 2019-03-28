@@ -1,4 +1,19 @@
 PODS:
+  - AFNetworking (3.2.1):
+    - AFNetworking/NSURLSession (= 3.2.1)
+    - AFNetworking/Reachability (= 3.2.1)
+    - AFNetworking/Security (= 3.2.1)
+    - AFNetworking/Serialization (= 3.2.1)
+    - AFNetworking/UIKit (= 3.2.1)
+  - AFNetworking/NSURLSession (3.2.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.2.1)
+  - AFNetworking/Security (3.2.1)
+  - AFNetworking/Serialization (3.2.1)
+  - AFNetworking/UIKit (3.2.1):
+    - AFNetworking/NSURLSession
   - PINCache (3.0.1-beta.7):
     - PINCache/Arc-exception-safe (= 3.0.1-beta.7)
     - PINCache/Core (= 3.0.1-beta.7)
@@ -16,28 +31,22 @@ PODS:
     - PINRemoteImage/Core
 
 DEPENDENCIES:
-  - PINRemoteImage (from `https://github.com/pinterest/PINRemoteImage.git`, commit `1d75206`)
+  - AFNetworking (~> 3.0)
+  - PINRemoteImage (= 3.0.0-beta.14)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - AFNetworking
     - PINCache
     - PINOperation
-
-EXTERNAL SOURCES:
-  PINRemoteImage:
-    :commit: 1d75206
-    :git: https://github.com/pinterest/PINRemoteImage.git
-
-CHECKOUT OPTIONS:
-  PINRemoteImage:
-    :commit: 1d75206
-    :git: https://github.com/pinterest/PINRemoteImage.git
+    - PINRemoteImage
 
 SPEC CHECKSUMS:
+  AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   PINCache: 7cb9ae068c8f655717f7c644ef1dff9fd573e979
   PINOperation: a6219e6fc9db9c269eb7a7b871ac193bcf400aac
   PINRemoteImage: 81bbff853acc71c6de9e106e9e489a791b8bbb08
 
-PODFILE CHECKSUM: 8465ed436bc6b51baf5f0d48b252d71b67b0b342
+PODFILE CHECKSUM: 2306bfb8183f25b9c84c7438485c1524c94d5fa3
 
 COCOAPODS: 1.6.1
