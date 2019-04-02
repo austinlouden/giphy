@@ -9,12 +9,11 @@
 #import "ViewController.h"
 
 #import "GIFCollectionViewCell.h"
+#import "GIFModel.h"
 
-#import <AFNetworking.h>
+#import <Photos/Photos.h>
 #import <PINRemoteImage/PINAnimatedImageView.h>
 #import <PINRemoteImage/PINImageView+PINRemoteImage.h>
-
-#define GIPHY_API_KEY @""
 
 static CGFloat const kSearchBarHeight = 48.0;
 static CGFloat const kSearchBarLeftRightPadding = 28.0;
@@ -23,7 +22,7 @@ static CGFloat const kSearchBarTopPadding = 48.0;
 @interface ViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UITextFieldDelegate>
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UITextField *textField;
-@property (nonatomic, strong) NSMutableArray *images;
+@property (nonatomic, strong) NSMutableArray<GIFModel *> *images;
 @end
 
 @implementation ViewController
@@ -91,16 +90,12 @@ static CGFloat const kSearchBarTopPadding = 48.0;
 
 - (void)fetchImages:(NSString *)query
 {
-    NSDictionary *parameters = @{ @"q": query, @"limit": @100, @"api_key": GIPHY_API_KEY};
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    
     __weak ViewController *weakSelf = self;
-    [manager GET:@"https://api.giphy.com/v1/gifs/search?" parameters:parameters progress:nil success:^(NSURLSessionTask *task, id responseObject) {
-        weakSelf.images = responseObject[@"data"];
+    [GIFModel fetchGIFsWithQuery:query completion:^(NSArray *images) {
+        [weakSelf.images removeAllObjects];
+        [weakSelf.images addObjectsFromArray:images];
         [weakSelf.collectionView.collectionViewLayout invalidateLayout];
         [weakSelf.collectionView reloadData];
-    } failure:^(NSURLSessionTask *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
     }];
 }
 
@@ -114,16 +109,14 @@ static CGFloat const kSearchBarTopPadding = 48.0;
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     GIFCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"GIFCell" forIndexPath:indexPath];
-    NSURL *url = [NSURL URLWithString:self.images[indexPath.row][@"images"][@"fixed_width"][@"url"]];
+    GIFModel *gif = self.images[indexPath.row];
     
-    CGFloat width = [self.images[indexPath.row][@"images"][@"fixed_width"][@"width"] floatValue];
-    CGFloat height = [self.images[indexPath.row][@"images"][@"fixed_width"][@"height"] floatValue];
-    CGFloat aspectRatio = width / height;
+    CGFloat aspectRatio = gif.imageSize.width / gif.imageSize.height;
 
     CGFloat fwidth = collectionView.frame.size.width - 20;
     cell.imageSize = CGSizeMake(fwidth, fwidth  / aspectRatio);
 
-    [cell.imageView pin_setImageFromURL:url];
+    [cell.imageView pin_setImageFromURL:gif.imageURL];
     return cell;
 }
 
@@ -138,10 +131,27 @@ static CGFloat const kSearchBarTopPadding = 48.0;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSURL *url = self.images[indexPath.row][@"url"];
+    /*
+    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+        switch (status) {
+            case PHAuthorizationStatusAuthorized:
+                NSLog(@"eef");
+                break;
+            case PHAuthorizationStatusRestricted:
+                NSLog(@"hefefeere");
+                break;
+            case PHAuthorizationStatusDenied:
+                NSLog(@"here");
+                break;
+            default:
+                break;
+        }
+    }];
+     */
+    NSURL *url = self.images[indexPath.row].imageURL;
     UIImage *image = [(GIFCollectionViewCell *)[self collectionView:self.collectionView cellForItemAtIndexPath:indexPath] imageView].image;
-    
     UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:@[url, image] applicationActivities:nil];
+    
     [self presentViewController:activityController animated:YES completion:nil];
 }
 

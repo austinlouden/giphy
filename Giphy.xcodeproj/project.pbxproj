@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		28BE738A22531B2E003394FD /* GIFModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BE738922531B2E003394FD /* GIFModel.m */; };
 		28F0E8DC224C41FA008439DA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F0E8DB224C41FA008439DA /* AppDelegate.m */; };
 		28F0E8DF224C41FA008439DA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F0E8DE224C41FA008439DA /* ViewController.m */; };
 		28F0E8E4224C41FB008439DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 28F0E8E3224C41FB008439DA /* Assets.xcassets */; };
@@ -37,6 +38,8 @@
 
 /* Begin PBXFileReference section */
 		073570C97F65311C7F30DCDB /* Pods-Giphy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Giphy.debug.xcconfig"; path = "Target Support Files/Pods-Giphy/Pods-Giphy.debug.xcconfig"; sourceTree = "<group>"; };
+		28BE738822531B2E003394FD /* GIFModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIFModel.h; sourceTree = "<group>"; };
+		28BE738922531B2E003394FD /* GIFModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIFModel.m; sourceTree = "<group>"; };
 		28F0E8D7224C41FA008439DA /* Giphy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Giphy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		28F0E8DA224C41FA008439DA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		28F0E8DB224C41FA008439DA /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -122,6 +125,8 @@
 				28F0E8DB224C41FA008439DA /* AppDelegate.m */,
 				28F0E8DD224C41FA008439DA /* ViewController.h */,
 				28F0E8DE224C41FA008439DA /* ViewController.m */,
+				28BE738822531B2E003394FD /* GIFModel.h */,
+				28BE738922531B2E003394FD /* GIFModel.m */,
 				28F518A5224C4D17001B9030 /* GIFCollectionViewCell.h */,
 				28F518A6224C4D17001B9030 /* GIFCollectionViewCell.m */,
 				28F0E8E3224C41FB008439DA /* Assets.xcassets */,
@@ -314,6 +319,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28F0E8DF224C41FA008439DA /* ViewController.m in Sources */,
+				28BE738A22531B2E003394FD /* GIFModel.m in Sources */,
 				28F0E8EA224C41FB008439DA /* main.m in Sources */,
 				28F0E8DC224C41FA008439DA /* AppDelegate.m in Sources */,
 				28F518A7224C4D17001B9030 /* GIFCollectionViewCell.m in Sources */,
