@@ -17,6 +17,8 @@ static CGFloat const kSearchBarHeight = 48.0;
 static CGFloat const kSearchBarLeftRightPadding = 28.0;
 static CGFloat const kSearchBarTopPadding = 48.0;
 
+static CGFloat const kCollectionViewLeftRightPadding = 16.0;
+
 @interface ViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UITextFieldDelegate>
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UITextField *textField;
@@ -74,8 +76,8 @@ static CGFloat const kSearchBarTopPadding = 48.0;
     self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.collectionView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
     [self.collectionView.topAnchor constraintEqualToAnchor:self.textField.bottomAnchor].active = YES;
-    [self.collectionView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active = YES;
-    [self.collectionView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor].active = YES;
+    [self.collectionView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:kCollectionViewLeftRightPadding].active = YES;
+    [self.collectionView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor constant: -kCollectionViewLeftRightPadding].active = YES;
 }
 
 - (void)fetchImages:(NSString *)query
@@ -119,8 +121,20 @@ static CGFloat const kSearchBarTopPadding = 48.0;
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-   GIFModel *model = [self.images objectAtIndex:indexPath.item];
-    return model.imageSize;
+    GIFModel *model = [self.images objectAtIndex:indexPath.item];
+    CGFloat width = 0.0;
+
+    // Use two columns if the device is in landscape
+    if (UIDeviceOrientationIsLandscape(UIDevice.currentDevice.orientation)) {
+        UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)collectionViewLayout;
+        width = CGRectGetWidth(collectionView.frame) / 2.0  - layout.minimumInteritemSpacing;
+    } else {
+        width = CGRectGetWidth(collectionView.frame);
+    }
+
+    // Set the height of the item based on the image's aspect ratio
+    CGFloat height = width / (model.imageSize.width / model.imageSize.height);
+    return CGSizeMake(width, height);
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
@@ -153,6 +167,15 @@ static CGFloat const kSearchBarTopPadding = 48.0;
     __weak typeof(self) weakSelf = self;
     [NSObject cancelPreviousPerformRequestsWithTarget:weakSelf selector:@selector(fetchImages:) object:nil];
     [weakSelf performSelector:@selector(fetchImages:) withObject:textField.text afterDelay:1.5];
+}
+
+#pragma mark - Rotation
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    // Invalidate the layout when we switch device orientation.
+    // This will ensure that sizeForItemAtIndexPath: is called again.
+    [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
 @end

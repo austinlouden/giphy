@@ -12,6 +12,8 @@
 
 #define GIPHY_API_KEY @""
 
+static NSInteger const kPageSize = 100;
+
 @implementation GIFModel
 
 - (instancetype)initWithSize:(CGSize)size url:(NSURL *)url
@@ -26,7 +28,7 @@
 
 + (void)fetchGIFsWithQuery:(NSString *)query completion:(void (^)(NSArray * _Nonnull))completion
 {
-    NSDictionary *parameters = @{ @"q": query, @"limit": @100, @"api_key": GIPHY_API_KEY};
+    NSDictionary *parameters = @{ @"q": query, @"limit": [NSNumber numberWithInteger:kPageSize], @"api_key": GIPHY_API_KEY};
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
 
     [manager GET:@"https://api.giphy.com/v1/gifs/search?" parameters:parameters progress:nil success:^(NSURLSessionTask *task, id responseObject) {
