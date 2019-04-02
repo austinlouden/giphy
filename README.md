@@ -70,8 +70,19 @@
 ```
 
 
-### Screenshots
+## Screenshots
+
+### Collection View Layout in portrait and landscape
 ![portrait](/Screenshots/iphone_xr_portrait.png)
 ![landscape](/Screenshots/iphone_xr_landscape.png)
+
+### iPad Support
 ![portrait ipad](/Screenshots/ipad_air_portrait.png)
 ![landscape ipad](/Screenshots/ipad_air_landscape.png)
+
+### Searching
+![search](/Screenshots/search.png)
+
+### Sharing a photo and saving to the camera roll
+![activity](/Screenshots/activity.png)
+![camera roll](/Screenshots/camera_roll.png)
