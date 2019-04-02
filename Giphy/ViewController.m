@@ -111,7 +111,6 @@ static CGFloat const kSearchBarTopPadding = 48.0;
     return self.images.count;
 }
 
-// The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     GIFCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"GIFCell" forIndexPath:indexPath];
@@ -135,6 +134,15 @@ static CGFloat const kSearchBarTopPadding = 48.0;
     CGFloat width = collectionView.safeAreaLayoutGuide.layoutFrame.size.width - 40;
     return CGSizeMake(width, 100);
     
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSURL *url = self.images[indexPath.row][@"url"];
+    UIImage *image = [(GIFCollectionViewCell *)[self collectionView:self.collectionView cellForItemAtIndexPath:indexPath] imageView].image;
+    
+    UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:@[url, image] applicationActivities:nil];
+    [self presentViewController:activityController animated:YES completion:nil];
 }
 
 #pragma mark - UITextFieldDelegate
