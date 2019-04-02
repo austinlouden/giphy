@@ -12,8 +12,6 @@
 #import "GIFModel.h"
 
 #import <Photos/Photos.h>
-#import <PINRemoteImage/PINAnimatedImageView.h>
-#import <PINRemoteImage/PINImageView+PINRemoteImage.h>
 
 static CGFloat const kSearchBarHeight = 48.0;
 static CGFloat const kSearchBarLeftRightPadding = 28.0;
@@ -50,18 +48,11 @@ static CGFloat const kSearchBarTopPadding = 48.0;
     self.textField.returnKeyType = UIReturnKeySearch;
     [self.textField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     [self.view addSubview:self.textField];
-
-    // Create the collection view
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.estimatedItemSize = UICollectionViewFlowLayoutAutomaticSize;
-    layout.sectionInsetReference = UICollectionViewFlowLayoutSectionInsetFromLayoutMargins;
     
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
     self.collectionView.backgroundColor = [UIColor whiteColor];
-    self.collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentAlways;
-    self.collectionView.contentInset = UIEdgeInsetsZero;
 
     [self.collectionView registerClass:[GIFCollectionViewCell class] forCellWithReuseIdentifier:@"GIFCell"];
     [self.view addSubview:self.collectionView];
@@ -85,7 +76,6 @@ static CGFloat const kSearchBarTopPadding = 48.0;
     [self.collectionView.topAnchor constraintEqualToAnchor:self.textField.bottomAnchor].active = YES;
     [self.collectionView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active = YES;
     [self.collectionView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor].active = YES;
-    
 }
 
 - (void)fetchImages:(NSString *)query
@@ -94,8 +84,12 @@ static CGFloat const kSearchBarTopPadding = 48.0;
     [GIFModel fetchGIFsWithQuery:query completion:^(NSArray *images) {
         [weakSelf.images removeAllObjects];
         [weakSelf.images addObjectsFromArray:images];
-        [weakSelf.collectionView.collectionViewLayout invalidateLayout];
         [weakSelf.collectionView reloadData];
+        
+        if (self.images.count > 0) {
+            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
+                                        atScrollPosition:UICollectionViewScrollPositionTop animated:YES];
+        }
     }];
 }
 
@@ -109,14 +103,7 @@ static CGFloat const kSearchBarTopPadding = 48.0;
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     GIFCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"GIFCell" forIndexPath:indexPath];
-    GIFModel *gif = self.images[indexPath.row];
-    
-    CGFloat aspectRatio = gif.imageSize.width / gif.imageSize.height;
-
-    CGFloat fwidth = collectionView.frame.size.width - 20;
-    cell.imageSize = CGSizeMake(fwidth, fwidth  / aspectRatio);
-
-    [cell.imageView pin_setImageFromURL:gif.imageURL];
+    cell.gif = self.images[indexPath.row];
     return cell;
 }
 
@@ -124,9 +111,8 @@ static CGFloat const kSearchBarTopPadding = 48.0;
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat width = collectionView.safeAreaLayoutGuide.layoutFrame.size.width - 40;
-    return CGSizeMake(width, 100);
-    
+   GIFModel *model = [self.images objectAtIndex:indexPath.item];
+    return model.imageSize;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
@@ -149,8 +135,8 @@ static CGFloat const kSearchBarTopPadding = 48.0;
     }];
      */
     NSURL *url = self.images[indexPath.row].imageURL;
-    UIImage *image = [(GIFCollectionViewCell *)[self collectionView:self.collectionView cellForItemAtIndexPath:indexPath] imageView].image;
-    UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:@[url, image] applicationActivities:nil];
+    //UIImage *image = [(GIFCollectionViewCell *)[self collectionView:self.collectionView cellForItemAtIndexPath:indexPath] imageView].image;
+    UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:@[url] applicationActivities:nil];
     
     [self presentViewController:activityController animated:YES completion:nil];
 }
@@ -161,7 +147,6 @@ static CGFloat const kSearchBarTopPadding = 48.0;
 {
     [self fetchImages:textField.text];
     [textField resignFirstResponder];
-    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:YES];
     return NO;
 }
 

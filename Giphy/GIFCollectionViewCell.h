@@ -8,13 +8,14 @@
 
 @class PINAnimatedImageView;
 
+#import "GIFModel.h"
+
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GIFCollectionViewCell : UICollectionViewCell
-@property (nonatomic, strong) PINAnimatedImageView *imageView;
-@property (nonatomic, assign) CGSize imageSize;
+@property (nonatomic, strong) GIFModel *gif;
 @end
 
 NS_ASSUME_NONNULL_END
