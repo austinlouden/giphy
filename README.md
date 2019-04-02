@@ -40,9 +40,9 @@
 ```
 
 
-- **Scrolling through collection view/GIFs should be smooth.** I can't say this is always 60fps (that'd require a bit more work getting as much stuff off the main thread as possible), but things are pretty smooth. I've used PINRemoteImage to handle GIFs, which is what's used at Pinterest. PINRemoteImage decodes images off the main thread so that animation performance isn't affected. It also caches images for quick requse later. I've kept the cache sizes at their defaults, but these could be tweaked to improve performance.
+- **Scrolling through collection view/GIFs should be smooth.** I can't say this is always 60 FPS (that'd require a bit more work getting as much stuff off the main thread as possible), but things are pretty smooth. I've used PINRemoteImage to handle GIFs, which is what's used at Pinterest. PINRemoteImage decodes images off the main thread so that animation performance isn't affected. It also caches images for quick reuse later. I've kept the cache sizes at their defaults, but these could be tweaked to improve performance.
 
-- **GIFs appear as they load, and offscreen GIFs are unloaded.** When `cellForItemAtIndexPath` sets the `gif` property on the cell, we either download the image or retrieve it from the cache in `setGif:` in `GIFCollectionViewCell.m`. Images are set to nil in `prepareForReuse`, which unloads the images as cells are recycled.
+- **GIFs appear as they load, and offscreen GIFs are unloaded.** When `cellForItemAtIndexPath` sets the `gif` property on the cell, we either download the image or retrieve it from the cache in `setGif:` in `GIFCollectionViewCell.m`. Images are set to nil in `prepareForReuse`, which unloads the images as cells are recycled. With more time, I could extend this to use the `UICollectionViewDataSourcePrefetching` protocol, and begin fetching images for cells that are about to appear.
 ```
 - (void)prepareForReuse
 {
