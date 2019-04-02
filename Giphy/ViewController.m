@@ -16,7 +16,9 @@
 
 #define GIPHY_API_KEY @""
 
-static CGFloat const kSearchBarHeight = 100.0;
+static CGFloat const kSearchBarHeight = 48.0;
+static CGFloat const kSearchBarLeftRightPadding = 28.0;
+static CGFloat const kSearchBarTopPadding = 48.0;
 
 @interface ViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UITextFieldDelegate>
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -39,13 +41,13 @@ static CGFloat const kSearchBarHeight = 100.0;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor blackColor];
+    self.view.backgroundColor = [UIColor whiteColor];
     
     // Create the search bar
     self.textField = [[UITextField alloc] init];
     self.textField.delegate = self;
-    self.textField.placeholder = @"Search";
-    self.textField.backgroundColor = [UIColor colorWithWhite:1 alpha:0.5];
+    self.textField.placeholder = @"Search for a great GIF...";
+    self.textField.backgroundColor = [UIColor whiteColor];
     self.textField.returnKeyType = UIReturnKeySearch;
     [self.view addSubview:self.textField];
 
@@ -64,11 +66,17 @@ static CGFloat const kSearchBarHeight = 100.0;
     [self.collectionView registerClass:[GIFCollectionViewCell class] forCellWithReuseIdentifier:@"GIFCell"];
     [self.view addSubview:self.collectionView];
 
+    [self setupConstraints];
+    [self fetchImages:@"ryan gosling"];
+}
+
+- (void)setupConstraints
+{
     // Setup search bar constraints
     self.textField.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.textField.topAnchor constraintEqualToAnchor:self.view.topAnchor].active = YES;
-    [self.textField.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active = YES;
-    [self.textField.rightAnchor constraintEqualToAnchor:self.view.rightAnchor].active = YES;
+    [self.textField.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:kSearchBarTopPadding].active = YES;
+    [self.textField.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:kSearchBarLeftRightPadding].active = YES;
+    [self.textField.rightAnchor constraintEqualToAnchor:self.view.rightAnchor constant:kSearchBarLeftRightPadding].active = YES;
     [self.textField.heightAnchor constraintEqualToConstant:kSearchBarHeight].active = YES;
     
     // Setup collection view constraints
@@ -78,8 +86,6 @@ static CGFloat const kSearchBarHeight = 100.0;
     [self.collectionView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active = YES;
     [self.collectionView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor].active = YES;
     
-    // Fetch the images
-    [self fetchImages:@"ryan gosling"];
 }
 
 - (void)fetchImages:(NSString *)query

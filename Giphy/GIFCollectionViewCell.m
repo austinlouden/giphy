@@ -34,6 +34,7 @@
 
 - (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes
 {
+    [super preferredLayoutAttributesFittingAttributes:layoutAttributes];
     [layoutAttributes setSize:CGSizeMake(self.frame.size.width, self.imageSize.height)];
     return layoutAttributes;
 }
