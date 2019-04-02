@@ -93,6 +93,14 @@ static CGFloat const kSearchBarTopPadding = 48.0;
     }];
 }
 
+- (void)shareImageAtIndex:(NSInteger)index
+{
+    NSURL *url = self.images[index].imageURL;
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:@[data] applicationActivities:nil];
+    [self presentViewController:activityController animated:YES completion:nil];
+}
+
 #pragma mark - UICollectionView Datasource and Delegate
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -117,28 +125,17 @@ static CGFloat const kSearchBarTopPadding = 48.0;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    /*
-    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-        switch (status) {
-            case PHAuthorizationStatusAuthorized:
-                NSLog(@"eef");
-                break;
-            case PHAuthorizationStatusRestricted:
-                NSLog(@"hefefeere");
-                break;
-            case PHAuthorizationStatusDenied:
-                NSLog(@"here");
-                break;
-            default:
-                break;
-        }
-    }];
-     */
-    NSURL *url = self.images[indexPath.row].imageURL;
-    //UIImage *image = [(GIFCollectionViewCell *)[self collectionView:self.collectionView cellForItemAtIndexPath:indexPath] imageView].image;
-    UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:@[url] applicationActivities:nil];
-    
-    [self presentViewController:activityController animated:YES completion:nil];
+    if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
+        [self shareImageAtIndex:indexPath.item];
+    } else {
+        // to implement later. If the user has already denied access,
+        // we can't continue to prompt. Help them go to settings to accept.
+        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+            if (status == PHAuthorizationStatusAuthorized) {
+                [self shareImageAtIndex:indexPath.item];
+            }
+        }];
+    }
 }
 
 #pragma mark - UITextFieldDelegate
