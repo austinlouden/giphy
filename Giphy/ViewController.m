@@ -49,6 +49,7 @@ static CGFloat const kSearchBarTopPadding = 48.0;
     self.textField.placeholder = @"Search for a great GIF...";
     self.textField.backgroundColor = [UIColor whiteColor];
     self.textField.returnKeyType = UIReturnKeySearch;
+    [self.textField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     [self.view addSubview:self.textField];
 
     // Create the collection view
@@ -144,6 +145,14 @@ static CGFloat const kSearchBarTopPadding = 48.0;
     [textField resignFirstResponder];
     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:YES];
     return NO;
+}
+
+- (void)textFieldDidChange:(UITextField *)textField
+{
+    // Search when the text field changes. Debounce 1.5 seconds to prevent several searches.
+    __weak typeof(self) weakSelf = self;
+    [NSObject cancelPreviousPerformRequestsWithTarget:weakSelf selector:@selector(fetchImages:) object:nil];
+    [weakSelf performSelector:@selector(fetchImages:) withObject:textField.text afterDelay:1.5];
 }
 
 @end
