@@ -51,7 +51,7 @@
 }
 ```
 
-**Search results are updated when the user taps search button.** I've also implemented automatic searching as the user types, which is debounced to every 1.5 seconds.
+- **Search results are updated when the user taps search button.** I've also implemented automatic searching as the user types, which is debounced to every 1.5 seconds.
 ```
 - (void)textFieldDidChange:(UITextField *)textField
 {
@@ -62,7 +62,7 @@
 }
 ```
 
-** The app layout supports any iOS device, including iPad, in landscape or portrait.** I've implemented a couple of  NSLayoutConstaints programmatically in `ViewController.m`.
+- **The app layout supports any iOS device, including iPad, in landscape or portrait.** I've implemented a couple of  NSLayoutConstaints programmatically in `ViewController.m`.
 ```
 [self.collectionView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
 [self.collectionView.topAnchor constraintEqualToAnchor:self.textField.bottomAnchor].active = YES;[self.collectionView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:kCollectionViewLeftRightPadding].active = YES;
